@@ -4,6 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+class Auth(db.Model):
+    __tablename__ = 'auth'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'<Auth {self.email}>'
+
+
 class City(db.Model):
     __tablename__ = 'city'
 
@@ -39,7 +50,7 @@ class User(db.Model):
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     date_of_birth = db.Column(db.Date, nullable=False)
-    
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
 
@@ -64,7 +75,7 @@ class Master(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id),
                         nullable=False)
     city = db.relationship('City', backref='masters')
-    
+
     def __repr__(self):
         return f'<Tattoo Master {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
 
