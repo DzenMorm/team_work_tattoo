@@ -4,6 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+class Auth(db.Model):
+    __tablename__ = 'auth'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password_hash = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'<Auth {self.email}, {self.password_hash}>'
+
+
 class City(db.Model):
     __tablename__ = 'city'
 
@@ -23,6 +34,9 @@ class Salon(db.Model):
     address = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
 
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='salons')
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='salons')
 
@@ -39,7 +53,10 @@ class User(db.Model):
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     date_of_birth = db.Column(db.Date, nullable=False)
-    
+
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='users')
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
 
@@ -57,6 +74,9 @@ class Master(db.Model):
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
 
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='masters')
+
     salon_id = db.Column(db.Integer, db.ForeignKey(Salon.id),
                          nullable=True)
     salon = db.relationship('Salon', backref='masters')
@@ -64,7 +84,7 @@ class Master(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id),
                         nullable=False)
     city = db.relationship('City', backref='masters')
-    
+
     def __repr__(self):
         return f'<Tattoo Master {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
 
