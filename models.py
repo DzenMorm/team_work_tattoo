@@ -12,7 +12,7 @@ class Auth(db.Model):
     password_hash = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'<Auth {self.email}>'
+        return f'<Auth {self.email}, {self.password_hash}>'
 
 
 class City(db.Model):
