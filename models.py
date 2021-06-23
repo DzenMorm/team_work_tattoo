@@ -9,7 +9,7 @@ class Auth(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f'<Auth {self.email}>'
@@ -34,6 +34,9 @@ class Salon(db.Model):
     address = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
 
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='salons')
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='salons')
 
@@ -51,6 +54,9 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     date_of_birth = db.Column(db.Date, nullable=False)
 
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='users')
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
 
@@ -67,6 +73,9 @@ class Master(db.Model):
     address = db.Column(db.String, nullable=False)
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
+
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
+    auth = db.relationship('Auth', backref='masters')
 
     salon_id = db.Column(db.Integer, db.ForeignKey(Salon.id),
                          nullable=True)
