@@ -11,16 +11,11 @@ class Auth(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    user = db.relationship('User', backref=db.backref('auth', uselist=False))
+    user = db.relationship('User', back_populates='auth', uselist=False)
 
-    salon_id = db.Column(db.Integer, db.ForeignKey('salons.id'), nullable=True)
-    salon = db.relationship('Salon', backref=db.backref('auth', uselist=False))
+    salon = db.relationship('Salon', back_populates='auth', uselist=False)
 
-    master_id = db.Column(db.Integer, db.ForeignKey('masters.id'),
-                          nullable=True)
-    master = db.relationship('Master', backref=db.backref(
-        'auth', uselist=False))
+    master = db.relationship('Master', back_populates='auth', uselist=False)
 
     def __repr__(self):
         return f'<Auth {self.email}, {self.password_hash}>'
@@ -48,6 +43,9 @@ class Salon(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='salons')
 
+    auth_id = db.Column(db.Integer, db.ForeignKey('auth.id'))
+    auth = db.relationship('Auth', back_populates='salon')
+
     def __repr__(self):
         return f'''<Tattoo Salon {self.name}, {self.address}, {self.email},
                     {self.number_phone}>'''
@@ -66,6 +64,9 @@ class User(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
 
+    auth_id = db.Column(db.Integer, db.ForeignKey('auth.id'))
+    auth = db.relationship('Auth', back_populates='user')
+
     def __repr__(self):
         return f'''<User {self.name}, {self.last_name}, {self.email},
                     {self.number_phone}>'''
@@ -80,6 +81,9 @@ class Master(db.Model):
     address = db.Column(db.String, nullable=False)
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
+
+    auth_id = db.Column(db.Integer, db.ForeignKey('auth.id'))
+    auth = db.relationship('Auth', back_populates='master')
 
     salon_id = db.Column(db.Integer, db.ForeignKey(Salon.id),
                          nullable=True)
