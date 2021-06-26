@@ -11,6 +11,15 @@ class Auth(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', backref=db.backref('auth', uselist=False))
+
+    salon_id = db.Column(db.Integer, db.ForeignKey('salons.id'))
+    salon = db.relationship('Salon', backref=db.backref('auth', uselist=False))
+
+    master_id = db.Column(db.Integer, db.ForeignKey('masters.id'))
+    master = db.relationship('Master', backref=db.backref('auth', uselist=False))
+
     def __repr__(self):
         return f'<Auth {self.email}, {self.password_hash}>'
 
@@ -34,14 +43,12 @@ class Salon(db.Model):
     address = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
-    auth = db.relationship('Auth', backref='salons')
-
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='salons')
 
     def __repr__(self):
-        return f'<Tattoo Salon {self.name}, {self.address}, {self.email}, {self.number_phone}>'
+        return f'''<Tattoo Salon {self.name}, {self.address}, {self.email},
+                    {self.number_phone}>'''
 
 
 class User(db.Model):
@@ -54,14 +61,12 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     date_of_birth = db.Column(db.Date, nullable=False)
 
-    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
-    auth = db.relationship('Auth', backref='users')
-
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
 
     def __repr__(self):
-        return f'<User {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
+        return f'''<User {self.name}, {self.last_name}, {self.email},
+                    {self.number_phone}>'''
 
 
 class Master(db.Model):
@@ -74,9 +79,6 @@ class Master(db.Model):
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id), nullable=False)
-    auth = db.relationship('Auth', backref='masters')
-
     salon_id = db.Column(db.Integer, db.ForeignKey(Salon.id),
                          nullable=True)
     salon = db.relationship('Salon', backref='masters')
@@ -86,7 +88,8 @@ class Master(db.Model):
     city = db.relationship('City', backref='masters')
 
     def __repr__(self):
-        return f'<Tattoo Master {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
+        return f'''<Tattoo Master {self.name}, {self.last_name}, {self.email},
+                    {self.number_phone}>'''
 
 
 class Review(db.Model):
