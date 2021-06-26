@@ -11,14 +11,16 @@ class Auth(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     user = db.relationship('User', backref=db.backref('auth', uselist=False))
 
-    salon_id = db.Column(db.Integer, db.ForeignKey('salons.id'))
+    salon_id = db.Column(db.Integer, db.ForeignKey('salons.id'), nullable=True)
     salon = db.relationship('Salon', backref=db.backref('auth', uselist=False))
 
-    master_id = db.Column(db.Integer, db.ForeignKey('masters.id'))
-    master = db.relationship('Master', backref=db.backref('auth', uselist=False))
+    master_id = db.Column(db.Integer, db.ForeignKey('masters.id'),
+                          nullable=True)
+    master = db.relationship('Master', backref=db.backref(
+        'auth', uselist=False))
 
     def __repr__(self):
         return f'<Auth {self.email}, {self.password_hash}>'
