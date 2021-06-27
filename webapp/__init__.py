@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from webapp.forms import LoginForm
-from webapp.model import db
+from webapp.models import db
 
 
 def create_app():
