@@ -4,27 +4,27 @@ from wtforms.validators import InputRequired, Email, EqualTo
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[InputRequired()], render_kw={"class": "form-control"})
+    email = StringField('Электронная почта', validators=[InputRequired()], render_kw={"class": "form-control"})
     password = PasswordField('Пароль', validators=[InputRequired()], render_kw={"class": "form-control"})
     submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
 
 
 class RegistrationForm(FlaskForm):
     email = StringField(
-        "Email",
+        "Электронная почта",
         validators=[InputRequired(), Email()],
         render_kw={"class": "form-control"}
     )
     password = PasswordField(
         "Пароль",
-        validators=[InputRequired(), EqualTo("repeat_password")],
+        validators=[InputRequired(), EqualTo("password2")],
         render_kw={"class": "form-control"}
     )
-    repeat_password = PasswordField(
+    password2 = PasswordField(
         "Повторите пароль",
         render_kw={"class": "form-control"}
     )
     submit = SubmitField(
         'Зарегистрироваться',
         render_kw={"class": "btn btn-primary"}
-    ) 
+    )

@@ -1,7 +1,25 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
+
+
+class Auth(db.Model, UserMixin):
+    __tablename__ = 'auth'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def __repr__(self):
+        return f'<Auth {self.id}, {self.email}>'
 
 
 class City(db.Model):
@@ -26,6 +44,9 @@ class Salon(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='salons')
 
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id))
+    auth = db.relationship('Auth', backref=db.backref('salon', uselist=False))
+
     def __repr__(self):
         return f'<Tattoo Salon {self.name}, {self.address}, {self.email}, {self.number_phone}>'
 
@@ -39,9 +60,12 @@ class User(db.Model):
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     date_of_birth = db.Column(db.Date, nullable=False)
-    
+
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
+
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id))
+    auth = db.relationship('Auth', backref=db.backref('user', uselist=False))
 
     def __repr__(self):
         return f'<User {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
@@ -64,7 +88,10 @@ class Master(db.Model):
     city_id = db.Column(db.Integer, db.ForeignKey(City.id),
                         nullable=False)
     city = db.relationship('City', backref='masters')
-    
+
+    auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id))
+    auth = db.relationship('Auth', backref=db.backref('master', uselist=False))
+
     def __repr__(self):
         return f'<Tattoo Master {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
 
