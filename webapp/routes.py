@@ -1,5 +1,5 @@
 from webapp import app
-from webapp.forms import LoginForm, RegistrationForm
+from webapp.forms import LoginForm, RegistrationForm, SalonForm, UserForm
 from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user
 from webapp.models import db, Auth
@@ -59,9 +59,31 @@ def process_reg():
     if form.validate_on_submit():
         new_register = Auth(email=form.email.data)
         new_register.set_password(form.password.data)
+        if form.role.data == '1':
+            return redirect(url_for('user_reg'))
+        elif form.role.data == '2':
+            pass
+        elif form.role.data == '3':
+            return redirect(url_for('salon_reg'))
         db.session.add(new_register)
         db.session.commit()
         flash('Вы успешно зарегистрировались!')
         return redirect(url_for('login'))
     flash('Пожалуйста, исправьте ошибки в форме регистрации')
     return redirect(url_for('register'))
+
+
+@app.route('/salon-reg')
+def salon_reg():
+    form = SalonForm()
+    title = 'Регистрация Салона'
+    return render_template('salon.html', page_title=title,
+                           form=form)
+
+
+@app.route('/user-reg')
+def user_reg():
+    form = UserForm()
+    title = 'Регистрация пользователя'
+    return render_template('user.html', page_title=title,
+                           form=form)

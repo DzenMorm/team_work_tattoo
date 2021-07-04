@@ -48,7 +48,8 @@ class Salon(db.Model):
     auth = db.relationship('Auth', backref=db.backref('salon', uselist=False))
 
     def __repr__(self):
-        return f'<Tattoo Salon {self.name}, {self.address}, {self.email}, {self.number_phone}>'
+        return f'''<Tattoo Salon {self.name}, {self.address}, {self.email},
+                    {self.number_phone}>'''
 
 
 class User(db.Model):
@@ -68,7 +69,8 @@ class User(db.Model):
     auth = db.relationship('Auth', backref=db.backref('user', uselist=False))
 
     def __repr__(self):
-        return f'<User {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
+        return f'''<User {self.name}, {self.last_name}, {self.email},
+                    {self.number_phone}>'''
 
 
 class Master(db.Model):
@@ -93,7 +95,8 @@ class Master(db.Model):
     auth = db.relationship('Auth', backref=db.backref('master', uselist=False))
 
     def __repr__(self):
-        return f'<Tattoo Master {self.name}, {self.last_name}, {self.email}, {self.number_phone}>'
+        return f'''<Tattoo Master {self.name}, {self.last_name}, {self.email},
+                    {self.number_phone}>'''
 
 
 class Review(db.Model):
