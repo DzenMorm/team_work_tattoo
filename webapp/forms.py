@@ -63,23 +63,37 @@ class SalonForm(FlaskForm):
 class MasterForm(FlaskForm):
     name = StringField(
         'Имя',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     last_name = StringField(
         'Фамилия',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
+    )
+    city = StringField(
+        'Город',
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     address = StringField(
         'Адрес',
         validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     number_phone = StringField(
         'Номер телефона',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     email = StringField(
         'Электронная почта',
-        validators=[InputRequired(), Email()]
+        validators=[InputRequired(), Email()],
+        render_kw={"class": "form-control"}
+    )
+    submit = SubmitField(
+        'Завершить регистрацию',
+        render_kw={"class": "btn btn-primary"}
     )
 
 
