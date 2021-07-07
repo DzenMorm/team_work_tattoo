@@ -131,13 +131,13 @@ def process_user_reg():
 
         new_user = User(
             name=form.name.data,
-            last_name=form.lant_name.data,
+            last_name=form.last_name.data,
             number_phone=form.number_phone.data,
             email=form.email.data,
-            date_of_birth=form.date_of_birth.data,
+            # date_of_birth=form.date_of_birth.data,
             city_id=city.id,
             auth_id=current_user.id)
-        
+
         print(new_user)
 
         db.session.add(new_user)
