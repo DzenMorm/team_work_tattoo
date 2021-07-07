@@ -29,7 +29,7 @@ class City(db.Model):
     name = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'<City {self.name}>'
+        return f'<City {self.name}, {self.id}>'
 
 
 class Salon(db.Model):
@@ -49,7 +49,7 @@ class Salon(db.Model):
 
     def __repr__(self):
         return f'''<Tattoo Salon {self.name}, {self.address}, {self.email},
-                    {self.number_phone}>'''
+                    {self.number_phone}, {self.city_id}, {self.city}>'''
 
 
 class User(db.Model):
