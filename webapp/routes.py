@@ -1,10 +1,10 @@
 import os
 from webapp import app
-from webapp.forms import LoginForm, RegistrationForm, MasterForm
-from flask import render_template, redirect, url_for, flash, request, current_app
+from webapp.forms import LoginForm, RegistrationForm, MasterForm, ImageForm
+from flask import render_template, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_user, logout_user
-from webapp.models import db, Auth, City, Master
+from webapp.models import db, Auth, City, Master, Image
 
 
 @app.route('/')
@@ -63,8 +63,7 @@ def process_reg():
         new_register.set_password(form.password.data)
         db.session.add(new_register)
         db.session.commit()
-        user = Auth.query.filter(Auth.email == form.email.data).first()
-        login_user(user)
+        login_user(new_register)
 
         flash('Вы успешно зарегистрировались!')
         return redirect(url_for('register_master'))
@@ -116,34 +115,24 @@ def profile_master():
     if not current_user.is_authenticated:
         return redirect(url_for('index'))
     title = 'Профиль'
-    name = current_user.master.name
-    last_name = current_user.master.last_name
-    email = current_user.master.email
-    number_phone = current_user.master.number_phone
-    return render_template(
-        'profile_master.html',
-        page_title=title,
-        name=name,
-        last_name=last_name,
-        email=email,
-        number_phone=number_phone)
+    form = ImageForm()
+    images = Image.query.filter(Image.master_id == current_user.master.id).all()
+    return render_template('profile_master.html', title=title, form=form, images=images)
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
-
-
-@app.route('/profile-master', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            return render_template('profile_master.html', filename=filename)
-
-
-@app.route('/display/<filename>')
-def display_image(filename):
-    return redirect(url_for('static', filename=filename), code=301)
+@app.route('/save-image', methods=['POST'])
+def save_image():
+    form = ImageForm()
+    if form.validate_on_submit():
+        for image in form.image.data:
+            filename = secure_filename(image.filename)
+            path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            image.save(path)
+            image_for_db = Image(
+                name=filename,
+                path=path,
+                master_id=current_user.master.id
+            )
+            db.session.add(image_for_db)
+            db.session.commit()
+        return redirect('profile-master')
