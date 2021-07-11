@@ -1,8 +1,10 @@
 from webapp import app
-from webapp.forms import LoginForm, RegistrationForm, MasterForm, SalonForm, UserForm
+from webapp.forms import LoginForm, RegistrationForm, MasterForm, SalonForm, UserForm, ImageForm
 from flask import render_template, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user
-from webapp.models import db, Auth, City, Master, User, Salon
+from webapp.models import db, Auth, City, Master, User, Salon, Image
+from werkzeug.utils import secure_filename
+import os
 
 
 @app.route('/')
@@ -101,7 +103,7 @@ def process_salon_reg():
             email=form.email.data,
             city_id=city.id,
             auth_id=current_user.id)
-        
+
         print(new_salon)
 
         db.session.add(new_salon)
@@ -134,7 +136,7 @@ def process_user_reg():
             last_name=form.last_name.data,
             number_phone=form.number_phone.data,
             email=form.email.data,
-            # date_of_birth=form.date_of_birth.data,
+            date_of_birth=form.date_of_birth.data,
             city_id=city.id,
             auth_id=current_user.id)
 
@@ -165,23 +167,57 @@ def process_master_reg():
             db.session.add(city)
             db.session.commit()
 
-        salon = Salon.query.filter(City.name == form.city.data).first()
+        salon = Salon.query.filter(Salon.name == form.salon.data).first()
         if not salon:
-            salon = Salon(name=form.salon.data)
-            db.session.add(salon)
-            db.session.commit()
-
-        master = Master(
-            name=form.name.data,
-            last_name=form.last_name.data,
-            number_phone=form.number_phone.data,
-            address=form.address.data,
-            email=form.email.data,
-            salon_id=salon.id,
-            city_id=city.id,
-            auth_id=current_user.id)
+            master = Master(
+                name=form.name.data,
+                last_name=form.last_name.data,
+                number_phone=form.number_phone.data,
+                address=form.address.data,
+                email=form.email.data,
+                city_id=city.id,
+                auth_id=current_user.id)
+        else:
+            master = Master(
+                name=form.name.data,
+                last_name=form.last_name.data,
+                number_phone=form.number_phone.data,
+                address=form.address.data,
+                email=form.email.data,
+                salon_id=salon.id,
+                city_id=city.id,
+                auth_id=current_user.id)
 
         db.session.add(master)
         db.session.commit()
         return redirect(url_for('index'))
     return redirect(url_for('index'))
+
+
+@app.route('/profile-master')
+def profile_master():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+    title = 'Профиль'
+    form = ImageForm()
+    images = Image.query.filter(Image.master_id == current_user.master.id).all()
+    print(images)
+    return render_template('profile_master.html', title=title, form=form, images=images)
+
+
+@app.route('/save-image', methods=['POST'])
+def save_image():
+    form = ImageForm()
+    if form.validate_on_submit():
+        for image in form.image.data:
+            filename = secure_filename(image.filename)
+            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image.save(path)
+            image_for_db = Image(
+                name=filename,
+                path=path,
+                master_id=current_user.master.id
+            )
+            db.session.add(image_for_db)
+            db.session.commit()
+        return redirect('profile-master')

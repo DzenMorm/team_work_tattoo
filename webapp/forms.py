@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.fields.html5 import EmailField
+from wtforms import StringField, PasswordField, SubmitField, MultipleFileField
+from wtforms.fields.html5 import EmailField, DateField
 from wtforms.fields.core import RadioField
 from wtforms.validators import InputRequired, Email, EqualTo
 
@@ -44,17 +44,17 @@ class RegistrationForm(FlaskForm):
 
 
 class SalonForm(FlaskForm):
-    name = StringField('Введите название Салона', validators=[InputRequired()],
+    name = StringField('Название Салона', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
-    number_phone = StringField('Введите Ваш номер телефона',
+    number_phone = StringField('Номер телефона',
                                validators=[InputRequired()],
                                render_kw={"class": "form-control"})
-    address = StringField('Введите адресс салона',
+    address = StringField('Адресс салона',
                           validators=[InputRequired()],
                           render_kw={"class": "form-control"})
     email = EmailField('Электронная почта', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
-    city = StringField('Введите город', validators=[InputRequired()],
+    city = StringField('Город', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
     submit = SubmitField(
         'Зарегистрироваться',
@@ -63,18 +63,20 @@ class SalonForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    name = StringField('Введите Имя', validators=[InputRequired()],
+    name = StringField('Имя', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
-    last_name = StringField('Введите Фамилию', validators=[InputRequired()],
+    last_name = StringField('Фамилия', validators=[InputRequired()],
                             render_kw={"class": "form-control"})
-    number_phone = StringField('Введите номер телефона',
+    number_phone = StringField('Номер телефона',
                                validators=[InputRequired()],
                                render_kw={"class": "form-control"})
     email = EmailField('Электронная почта', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
-    # date_of_birth = StringField('Введите дату рождения',
-    #                             render_kw={"class": "form-control"})
-    city = StringField('Введите город', validators=[InputRequired()],
+    date_of_birth = DateField('Введите дату рождения',
+                              validators=[InputRequired()],
+                              format='%Y-%m-%d',
+                              render_kw={"class": "form-control"})
+    city = StringField('Город', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
     submit = SubmitField(
         'Зарегистрироваться',
@@ -83,24 +85,34 @@ class UserForm(FlaskForm):
 
 
 class MasterForm(FlaskForm):
-    name = StringField('Введите Имя', validators=[InputRequired()],
+    name = StringField('Имя', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
-    last_name = StringField('Введите Фамилию', validators=[InputRequired()],
+    last_name = StringField('Фамилию', validators=[InputRequired()],
                             render_kw={"class": "form-control"})
-    number_phone = StringField('Введите номер телефона',
+    number_phone = StringField('Номер телефона',
                                validators=[InputRequired()],
                                render_kw={"class": "form-control"})
-    address = StringField('Введите адресс',
+    address = StringField('Адресс',
                           validators=[InputRequired()],
                           render_kw={"class": "form-control"})
-    email = EmailField('Введите электронную почту',
+    email = EmailField('Электронная почта',
                        validators=[InputRequired()],
                        render_kw={"class": "form-control"})
     salon = StringField('Введите салон в котором работаете (если есть)',
                         render_kw={"class": "form-control"})
-    city = StringField('Введите город', validators=[InputRequired()],
+    city = StringField('Город', validators=[InputRequired()],
                        render_kw={"class": "form-control"})
     submit = SubmitField(
         'Зарегистрироваться',
+        render_kw={"class": "btn btn-primary"}
+    )
+
+
+class ImageForm(FlaskForm):
+    image = MultipleFileField(
+        render_kw={"class": "form-control"}
+    )
+    submit = SubmitField(
+        'Загрузить',
         render_kw={"class": "btn btn-primary"}
     )
