@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -61,10 +60,9 @@ class User(db.Model):
     last_name = db.Column(db.String, nullable=False)
     number_phone = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
-    # date_of_birth = db.Column(
-    #     db.Date,
-    #     default=datetime.now().strftime('%d.%m.%Y'),
-    #     nullable=True)
+    date_of_birth = db.Column(
+        db.Date,
+        nullable=False)
 
     city_id = db.Column(db.Integer, db.ForeignKey(City.id), nullable=False)
     city = db.relationship('City', backref='users')
