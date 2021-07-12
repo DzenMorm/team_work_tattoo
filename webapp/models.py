@@ -90,7 +90,7 @@ class Master(db.Model):
     salon = db.relationship('Salon', backref='masters')
 
     city_id = db.Column(db.Integer, db.ForeignKey(City.id),
-                        nullable=False)
+                        nullable=True)
     city = db.relationship('City', backref='masters')
 
     auth_id = db.Column(db.Integer, db.ForeignKey(Auth.id))
