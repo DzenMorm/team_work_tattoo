@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField
+from wtforms import StringField, PasswordField, SubmitField, DateField, MultipleFileField
 from wtforms.validators import InputRequired, Email, EqualTo
 
 
@@ -63,23 +63,37 @@ class SalonForm(FlaskForm):
 class MasterForm(FlaskForm):
     name = StringField(
         'Имя',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     last_name = StringField(
         'Фамилия',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
+    )
+    city = StringField(
+        'Город',
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     address = StringField(
         'Адрес',
         validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     number_phone = StringField(
         'Номер телефона',
-        validators=[InputRequired()]
+        validators=[InputRequired()],
+        render_kw={"class": "form-control"}
     )
     email = StringField(
         'Электронная почта',
-        validators=[InputRequired(), Email()]
+        validators=[InputRequired(), Email()],
+        render_kw={"class": "form-control"}
+    )
+    submit = SubmitField(
+        'Завершить регистрацию',
+        render_kw={"class": "btn btn-primary"}
     )
 
 
@@ -103,4 +117,14 @@ class UserForm(FlaskForm):
     date_of_birth = DateField(
         'Дата рождения',
         validators=[InputRequired()]
+    )
+
+
+class ImageForm(FlaskForm):
+    image = MultipleFileField(
+        render_kw={"class": "form-control"}
+    )
+    submit = SubmitField(
+        'Загрузить',
+        render_kw={"class": "btn btn-primary"}
     )
