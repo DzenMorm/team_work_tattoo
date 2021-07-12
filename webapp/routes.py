@@ -102,7 +102,6 @@ def process_salon_reg():
             city_id=city.id,
             auth_id=current_user.id)
 
-
         db.session.add(new_salon)
         db.session.commit()
         return redirect(url_for('index'))
