@@ -25,23 +25,27 @@
             <div class='col'></div>
             <div class="col">
                 <h1>{{ page_title }}</h1>
-                <form action="{{ url_for('process_reg') }}" method="post">
+                <form action="{{ url_for('process_salon_reg') }}" method="post">
                     {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.name.label }}
+                        {{ form.name() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.number_phone.label }}
+                        {{ form.number_phone() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.address.label }}
+                        {{ form.address() }}
+                    </div>
                     <div class="mb-3">
                         {{ form.email.label }}
                         {{ form.email() }}
                     </div>
                     <div class="mb-3">
-                        {{ form.password.label }}
-                        {{ form.password() }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.password2.label }}
-                        {{ form.password2() }}
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <h5>{{ form.role.label }}</h5>
-                            {{ form.role() }}
+                        {{ form.city.label }}
+                        {{ form.city() }}
                     </div>
                     <br>
                     {{ form.submit }}
