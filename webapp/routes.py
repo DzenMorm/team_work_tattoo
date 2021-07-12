@@ -33,7 +33,12 @@ def process_login():
         if user and user.check_password(form.password.data):
             flash('Вы успешно вошли на сайт')
             login_user(user)
-            return redirect(url_for('profile_master'))
+            if current_user.salon:
+                return redirect(url_for('profile_salon'))
+            elif current_user.master:
+                return redirect(url_for('profile_master'))
+            else:
+                return redirect(url_for('profile_user'))
     flash('Неправильная почта или пароль')
     return redirect(url_for('login'))
 
@@ -108,6 +113,11 @@ def process_salon_reg():
     return redirect(url_for('index'))
 
 
+@app.route('/profile-salon')
+def profile_salon():
+    return render_template('profile_salon.html')
+
+
 @app.route('/user-reg')
 def user_reg():
     form = UserForm()
@@ -139,6 +149,11 @@ def process_user_reg():
         db.session.commit()
         return redirect(url_for('index'))
     return redirect(url_for('index'))
+
+
+@app.route('/profile-user')
+def profile_user():
+    return render_template('profile_user.html')
 
 
 @app.route('/master-reg')
