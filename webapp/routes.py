@@ -135,7 +135,6 @@ def process_user_reg():
             city_id=city.id,
             auth_id=current_user.id)
 
-
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('index'))
@@ -186,7 +185,7 @@ def process_master_reg():
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
-  
+
 @app.route('/register-master')
 def register_master():
     # if current_user.is_authenticated:
@@ -195,35 +194,6 @@ def register_master():
     form = MasterForm()
     return render_template('register_master.html', page_title=title,
                            form=form)
-
-
-@app.route('/process-reg-master', methods=['POST'])
-def process_reg_master():
-    form = MasterForm()
-    if form.validate_on_submit():
-        city = City.query.filter(City.name == form.city.data).first()
-        if not city:
-            city = [{
-                'name': form.city.data
-            }]
-            db.session.bulk_insert_mappings(City, city, return_defaults=True)
-            city_id = city[0]['id']
-        else:
-            city_id = city.id
-
-        master = Master(
-            name=form.name.data,
-            last_name=form.last_name.data,
-            address=form.address.data,
-            number_phone=form.number_phone.data,
-            email=form.email.data,
-            city_id=city_id,
-            auth_id=current_user.id)
-
-        db.session.add(master)
-        db.session.commit()
-        return redirect(url_for('profile_master'))
-    return redirect(url_for('process_reg_master'))
 
 
 @app.route('/profile-master')
