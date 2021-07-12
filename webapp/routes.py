@@ -143,6 +143,8 @@ def process_user_reg():
 
 @app.route('/master-reg')
 def master_reg():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('index'))
     title = 'Регистрация тату-мастера'
     form = MasterForm()
     return render_template('masterreg.html', page_title=title,
@@ -182,18 +184,8 @@ def process_master_reg():
 
         db.session.add(master)
         db.session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('profile_master'))
     return redirect(url_for('index'))
-
-
-@app.route('/register-master')
-def register_master():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('index'))
-    title = 'Регистрация тату-мастера'
-    form = MasterForm()
-    return render_template('register_master.html', page_title=title,
-                           form=form)
 
 
 @app.route('/profile-master')
