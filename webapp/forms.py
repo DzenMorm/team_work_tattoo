@@ -125,3 +125,18 @@ class ImageForm(FlaskForm):
         'Загрузить',
         render_kw={"class": "btn btn-primary"}
     )
+
+
+class SearchCityForm(FlaskForm):
+    city = StringField(
+        'Город',
+        validators=[InputRequired()],
+        render_kw={
+            "class": "form-control",
+            'placeholder': 'Введите город'
+        }
+    )
+    submit = SubmitField(
+        'Найти',
+        render_kw={"class": "btn btn-primary"}
+    )
