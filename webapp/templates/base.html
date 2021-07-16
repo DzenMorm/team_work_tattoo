@@ -12,8 +12,7 @@
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <style>
         .div {
-            background: #466368;
-            background: linear-gradient(#648880, #293f50);
+            background: #a3313136;
         }
     </style>
     <title>{{ page_title }}</title>
@@ -33,6 +32,15 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ url_for('index') }}">Главная</a>
                     </li>
+                    {% if current_user.master %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('profile_master') }}">Профиль</a>
+                    </li>
+                    {% elif current_user.salon %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('profile_salon') }}">Профиль</a>
+                    </li>
+                    {% endif %}
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ url_for('logout') }}">Выйти</a>

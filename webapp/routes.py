@@ -94,6 +94,12 @@ def process_reg():
 def salon_reg():
     form = SalonForm()
     title = 'Регистрация Салона'
+    if current_user.user:
+        return redirect(url_for('index'))
+    elif current_user.master:
+        return redirect(url_for('profile_master'))
+    elif current_user.salon:
+        return redirect(url_for('profile_salon'))
     return render_template('login/salonreg.html', page_title=title,
                            form=form)
 
@@ -128,7 +134,7 @@ def profile_salon():
         return redirect(url_for('index'))
     title = 'Профиль'
     form = ImageForm()
-    images = Image.query.filter(Image.salon_id == current_user.salon.id).all()
+    images = current_user.salon.images
     return render_template('salon/profile_salon.html', title=title, form=form, images=images)
 
 
@@ -136,6 +142,12 @@ def profile_salon():
 def user_reg():
     form = UserForm()
     title = 'Регистрация пользователя'
+    if current_user.user:
+        return redirect(url_for('index'))
+    elif current_user.master:
+        return redirect(url_for('profile_master'))
+    elif current_user.salon:
+        return redirect(url_for('profile_salon'))
     return render_template('login/userreg.html', page_title=title,
                            form=form)
 
@@ -174,6 +186,12 @@ def process_user_reg():
 def master_reg():
     title = 'Регистрация тату-мастера'
     form = MasterForm()
+    if current_user.user:
+        return redirect(url_for('index'))
+    elif current_user.master:
+        return redirect(url_for('profile_master'))
+    elif current_user.salon:
+        return redirect(url_for('profile_salon'))
     return render_template('login/masterreg.html', page_title=title,
                            form=form)
 
@@ -251,6 +269,7 @@ def save_image():
             return redirect(url_for('profile_master'))
         elif current_user.salon:
             return redirect(url_for('profile_salon'))
+
 
 @app.route('/card-master/<masterID>')
 def card_master(masterID):
