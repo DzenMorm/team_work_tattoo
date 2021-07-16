@@ -25,13 +25,15 @@
 
             <dt class="col-sm-12">
                 <h2 align="center">Эскизы</h2>
+        
                 <form action="{{ url_for('save_image') }}" method="post" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
-                    <div class="mb-3">
-                        {{ form.image() }}
-                    </div>
-                    {{ form.submit }}
+                <dl class='row'>
+                    <dt class="col-sm-11">{{ form.image() }} </dt>
+                    <dd class="col-sm-1"> {{ form.submit }}</dd>
+                </dl>
                 </form>
+               
                 <dl class="row">
                     {% if images %}
                     {% for image in images %}
