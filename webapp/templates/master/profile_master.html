@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class='container'>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        <dl class="row">
+            <dt class="col-sm-3">Имя</dt>
+            <dd class="col-sm-9">{{ current_user.master.name }}</dd>
+            
+            <dt class="col-sm-3">Фамилия</dt>
+            <dd class="col-sm-9">{{ current_user.master.last_name }}</dd>
+            
+            <dt class="col-sm-3">Электронная почта</dt>
+            <dd class="col-sm-9">{{ current_user.master.email }}</dd>
+            
+            <dt class="col-sm-3 text-truncate">Номер телефона</dt>
+            <dd class="col-sm-9">{{ current_user.master.number_phone }}</dd>
+            
+            <dt class="col-sm-6">Эскизы
+                <form action="{{ url_for('save_image') }}" method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.image() }}
+                    </div> 
+                    {{ form.submit }}
+                </form>
+                <dl class="row">
+                {% if images %}
+                    {% for image in images %}
+                        <dt class="col-sm-4">
+                        <label class="form-label">{{ image.name }}</label>
+                        <img src='/static/images/{{ image.name }}' alt="{{ image.name }}" class="img-thumbnail" width="120" height="120">
+                        </dt>
+                    {% endfor %}
+                {% endif %}
+                </dl>
+            </dt>   
+            <dt class="col-sm-6">Работы</dt>
+
+        </dl>
+    </div>
+{% endblock %}

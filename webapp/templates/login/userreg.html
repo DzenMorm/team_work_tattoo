@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class='container'>
+        <div class="row align-items-center">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-warning" role="alert">
+                {% for message in messages %}
+                {{ message }}<br>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div class='col'></div>
+            <span
+                class="border border-1 col-3 bg-light text-dark rounded-3 shadow-lg p-3 mb-5 rounded position-absolute top-50 start-50 translate-middle">
+                <h1>{{ page_title }}</h1>
+                <form action="{{ url_for('process_user_reg') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.name.label }}
+                        {{ form.name() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.last_name.label }}
+                        {{ form.last_name() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.number_phone.label }}
+                        {{ form.number_phone() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.date_of_birth.label }}
+                        {{ form.date_of_birth() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.email.label }}
+                        {{ form.email() }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.city.label }}
+                        {{ form.city() }}
+                    </div>
+                    <br>
+                    {{ form.submit }}
+                </form>
+            </span>
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
