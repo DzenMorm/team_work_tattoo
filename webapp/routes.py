@@ -9,11 +9,8 @@ from werkzeug.utils import secure_filename
 
 @app.route('/')
 def index():
-    title = 'Начальная страница'
-    nav_bar = 'Вход'
-    reg = 'Регистрация'
-    return render_template('index.html', page_title=title,
-                           nav_bar_link=nav_bar, reg=reg)
+    title = 'Главная страница'
+    return render_template('base.html', page_title=title)
 
 
 @app.route('/login')
@@ -22,7 +19,7 @@ def login():
         return redirect(url_for('index'))
     title = 'Авторизация'
     login_form = LoginForm()
-    return render_template('login.html', page_title=title, form=login_form)
+    return render_template('login/login.html', page_title=title, form=login_form)
 
 
 @app.route('/process-login', methods=['POST'])
@@ -38,7 +35,7 @@ def process_login():
             elif current_user.master:
                 return redirect(url_for('profile_master'))
             else:
-                return redirect(url_for('profile_user'))
+                return redirect(url_for('index'))
     flash('Неправильная почта или пароль')
     return redirect(url_for('login'))
 
@@ -56,7 +53,7 @@ def register():
         return redirect(url_for('index'))
     title = 'Регистрация'
     login_form = RegistrationForm()
-    return render_template('registration.html', page_title=title,
+    return render_template('login/registration.html', page_title=title,
                            form=login_form)
 
 
@@ -85,7 +82,7 @@ def process_reg():
 def salon_reg():
     form = SalonForm()
     title = 'Регистрация Салона'
-    return render_template('salonreg.html', page_title=title,
+    return render_template('login/salonreg.html', page_title=title,
                            form=form)
 
 
@@ -109,20 +106,25 @@ def process_salon_reg():
 
         db.session.add(new_salon)
         db.session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('profile_salon'))
     return redirect(url_for('index'))
 
 
 @app.route('/profile-salon')
 def profile_salon():
-    return render_template('profile_salon.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+    title = 'Профиль'
+    form = ImageForm()
+    images = Image.query.filter(Image.salon_id == current_user.salon.id).all()
+    return render_template('salon/profile_salon.html', title=title, form=form, images=images)
 
 
 @app.route('/user-reg')
 def user_reg():
     form = UserForm()
     title = 'Регистрация пользователя'
-    return render_template('userreg.html', page_title=title,
+    return render_template('login/userreg.html', page_title=title,
                            form=form)
 
 
@@ -151,18 +153,16 @@ def process_user_reg():
     return redirect(url_for('index'))
 
 
-@app.route('/profile-user')
-def profile_user():
-    return render_template('profile_user.html')
+# @app.route('/profile-user')
+# def profile_user():
+#     return render_template('profile_user.html')
 
 
 @app.route('/master-reg')
 def master_reg():
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('index'))
     title = 'Регистрация тату-мастера'
     form = MasterForm()
-    return render_template('masterreg.html', page_title=title,
+    return render_template('login/masterreg.html', page_title=title,
                            form=form)
 
 
@@ -210,7 +210,7 @@ def profile_master():
     title = 'Профиль'
     form = ImageForm()
     images = Image.query.filter(Image.master_id == current_user.master.id).all()
-    return render_template('profile_master.html', title=title, form=form, images=images)
+    return render_template('master/profile_master.html', title=title, form=form, images=images)
 
 
 @app.route('/save-image', methods=['POST'])
@@ -221,11 +221,21 @@ def save_image():
             filename = secure_filename(image.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             image.save(path)
-            image_for_db = Image(
-                name=filename,
-                path=path,
-                master_id=current_user.master.id
-            )
+            if current_user.master:
+                image_for_db = Image(
+                    name=filename,
+                    path=path,
+                    master_id=current_user.master.id
+                )
+            elif current_user.salon:
+                image_for_db = Image(
+                    name=filename,
+                    path=path,
+                    salon_id=current_user.salon.id
+                )
             db.session.add(image_for_db)
             db.session.commit()
-        return redirect('profile-master')
+        if current_user.master:
+            return redirect(url_for('profile_master'))
+        elif current_user.salon:
+            return redirect(url_for('profile_salon'))
