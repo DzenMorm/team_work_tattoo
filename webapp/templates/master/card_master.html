@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container bootstrap snippets bootdey">
+        <div class="panel-body inf-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <img alt="" style="width:600px;" title="" class="img-circle img-thumbnail isTooltip"
+                        src="https://bootdey.com/img/Content/avatar/avatar7.png" data-original-title="Usuario">
+                </div>
+                <div class="col-md-6">
+                    <strong>Информация о мастере</strong><br>
+                    <div class="table-responsive">
+                        <table class="table table-user-information">
+                            <tbody>
+
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span class="glyphicon glyphicon-user  text-primary"></span>
+                                            Имя
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{ master.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span class="glyphicon glyphicon-cloud text-primary"></span>
+                                            Фамилия
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{ master.last_name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span class="glyphicon glyphicon-eye-open text-primary"></span>
+                                            Адрес
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{ master.address }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span class="glyphicon glyphicon-envelope text-primary"></span>
+                                            Номер телефона
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{ master.number_phone }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                            Электронная почта
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{ master.email }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

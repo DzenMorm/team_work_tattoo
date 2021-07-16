@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="row">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+            {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <br>
+
+    <form class="container" action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.city() }}
+        </div>
+        {{ form.submit() }}
+    </form>
+    <br>
+
+
+    <div class="row">
+        <dt class="col-sm-6">
+            <h2 align="center">Салоны</h2>
+
+            <dl class="row">
+                {% if salons %}
+                {% for salon in salons %}
+                <a href="{{ url_for('card_salon', salonID = salon.id) }}">{{ salon.name }}</a>
+                {% endfor %}
+                {% endif %}
+            </dl>
+        </dt>
+
+        <dt class="col-sm-6">
+            <h2 align="center">Мастера</h2>
+
+            <dl class="row">
+                {% if masters %}
+                {% for master in masters %}
+                <a href="{{ url_for('card_master', masterID = master.id) }}">{{ master.name }} {{master.last_name}}</a>
+                {% endfor %}
+                {% endif %}
+            </dl>
+        </dt>
+    </div>
+{% endblock %}

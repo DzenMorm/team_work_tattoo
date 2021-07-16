@@ -1,16 +1,28 @@
 import os
 from webapp import app
-from webapp.forms import LoginForm, RegistrationForm, MasterForm, SalonForm, UserForm, ImageForm
-from flask import render_template, redirect, url_for, flash
+from webapp.forms import LoginForm, RegistrationForm, MasterForm, SalonForm, UserForm, ImageForm, SearchCityForm
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_user, logout_user
 from webapp.models import db, Auth, City, Master, User, Salon, Image
 from werkzeug.utils import secure_filename
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    title = 'Главная страница'
-    return render_template('base.html', page_title=title)
+    title = 'Начальная страница'
+    form = SearchCityForm()
+    masters = None
+    salons = None
+    if request.method == 'POST' and form.validate_on_submit():
+        city = City.query.filter(City.name == form.city.data).first()
+        if city:
+            masters = city.masters
+            salons = city.salons
+        else:
+            flash('По данному городу нет информации')
+    return render_template('index.html', page_title=title,
+                           form=form,
+                           masters=masters, salons=salons)
 
 
 @app.route('/login')
@@ -209,7 +221,7 @@ def profile_master():
         return redirect(url_for('index'))
     title = 'Профиль'
     form = ImageForm()
-    images = Image.query.filter(Image.master_id == current_user.master.id).all()
+    images = current_user.master.images
     return render_template('master/profile_master.html', title=title, form=form, images=images)
 
 
@@ -239,3 +251,14 @@ def save_image():
             return redirect(url_for('profile_master'))
         elif current_user.salon:
             return redirect(url_for('profile_salon'))
+
+@app.route('/card-master/<masterID>')
+def card_master(masterID):
+    master = Master.query.filter(Master.id == masterID).first()
+    return render_template('master/card_master.html', master=master)
+
+
+@app.route('/card-salon/<salonID>')
+def card_salon(salonID):
+    salon = Salon.query.filter(Salon.id == salonID).first()
+    return render_template('salon/card_salon.html', salon=salon)
