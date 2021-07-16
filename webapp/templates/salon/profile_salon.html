@@ -1,49 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
     <div class='container'>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <div class="alert alert-warning" role="alert">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}<br><br>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+            {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         <dl class="row">
             <dt class="col-sm-3">Название Салона</dt>
             <dd class="col-sm-9">{{ current_user.salon.name }}</dd>
-                        
+
+            <dt class="col-sm-3">Адрес</dt>
+            <dd class="col-sm-9">{{ current_user.salon.address }}</dd>
+
             <dt class="col-sm-3">Электронная почта</dt>
             <dd class="col-sm-9">{{ current_user.salon.email }}</dd>
-            
+
             <dt class="col-sm-3 text-truncate">Номер телефона</dt>
             <dd class="col-sm-9">{{ current_user.salon.number_phone }}</dd>
 
-            <dt class="col-sm-3">Фамилия</dt>
-            <dd class="col-sm-9">{{ current_user.salon.address }}</dd>
-            
-            <dt class="col-sm-6">Эскизы
+            <dt class="col-sm-12">
+                <h2 align="center">Эскизы</h2>
                 <form action="{{ url_for('save_image') }}" method="post" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
                         {{ form.image() }}
-                    </div> 
+                    </div>
                     {{ form.submit }}
                 </form>
                 <dl class="row">
-                {% if images %}
+                    {% if images %}
                     {% for image in images %}
-                        <dt class="col-sm-4">
-                        <label class="form-label">{{ image.name }}</label>
-                        <img src='/static/images/{{ image.name }}' alt="{{ image.name }}" class="img-thumbnail" width="120" height="120">
-                        </dt>
-                    {% endfor %}
-                {% endif %}
-                </dl>
-            </dt>   
-            <dt class="col-sm-6">Работы</dt>
+                    <dt class="col-sm-4">
+                        <label class="form-label">{{ image.name }}</label><br>
 
+                        <a href='big.jpg' target='_blank'>
+                            <img src='/static/images/{{ image.name }}' alt="{{ image.name }}"
+                                class="rounded mx-auto d-block" width="200" height="200">
+                        </a>
+
+                        <br>
+                    </dt>
+                    {% endfor %}
+                    {% endif %}
+                </dl>
+            </dt>
         </dl>
     </div>
 {% endblock %}
