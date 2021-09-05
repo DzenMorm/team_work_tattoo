@@ -16,7 +16,7 @@
             <span
                 class="border border-1 col-3 bg-light text-dark rounded-3 shadow-lg p-3 mb-5 rounded position-absolute top-50 start-50 translate-middle">
                 <h1>{{ page_title }}</h1>
-                <form action="{{ url_for('process_salon_reg') }}" method="post">
+                <form action="{{ url_for('salon.process_salon_reg') }}" method="post">
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
                         {{ form.name.label }}

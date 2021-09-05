@@ -26,7 +26,7 @@
             <dt class="col-sm-12">
                 <h2 align="center">Эскизы</h2>
         
-                <form action="{{ url_for('save_image') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('general.save_image') }}" method="post" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                 <dl class='row'>
                     <dt class="col-sm-11">{{ form.image() }} </dt>

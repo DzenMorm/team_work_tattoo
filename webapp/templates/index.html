@@ -33,7 +33,7 @@
             <dl class="row">
                 {% if salons %}
                 {% for salon in salons %}
-                <sizefont><a href="{{ url_for('card_salon', salonID = salon.id) }}">{{ salon.name }}</a></sizefont>
+                <sizefont><a href="{{ url_for('salon.card_salon', salonID = salon.id) }}">{{ salon.name }}</a></sizefont>
                 {% endfor %}
                 {% endif %}
             </dl>
@@ -45,7 +45,7 @@
             <dl class="row">
                 {% if masters %}
                 {% for master in masters %}
-                <sizefont><a href="{{ url_for('card_master', masterID = master.id) }}">{{ master.name }} {{master.last_name}}</a></sizefont>
+                <sizefont><a href="{{ url_for('master.card_master', masterID = master.id) }}">{{ master.name }} {{master.last_name}}</a></sizefont>
                 {% endfor %}
                 {% endif %}
             </dl>
