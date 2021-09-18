@@ -2,7 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, MultipleFileField
 from wtforms.fields.html5 import EmailField
 from wtforms.fields.core import RadioField
-from wtforms.validators import InputRequired, Email, EqualTo
+from wtforms.validators import InputRequired, Email, EqualTo, ValidationError
+
+from webapp.general.models import Auth
 
 
 class LoginForm(FlaskForm):
@@ -51,9 +53,15 @@ class RegistrationForm(FlaskForm):
         render_kw={"class": "btn btn-primary"}
     )
 
+    def validate_email(self, email):
+        count_email = Auth.query.filter_by(email=email.data).count()
+        if count_email > 0:
+            raise ValidationError('Такая почта уже существует')
+
 
 class ImageForm(FlaskForm):
     image = MultipleFileField(
+        validators=[InputRequired()],
         render_kw={"class": "form-control"}
     )
     submit = SubmitField(

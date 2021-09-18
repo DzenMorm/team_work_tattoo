@@ -1,11 +1,11 @@
 from webapp.user.forms import UserForm
 
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
 from webapp.db import db
 
 from webapp.general.models import City
-from webapp.user.models import User
+from .models import User
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 
@@ -46,7 +46,11 @@ def process_user_reg():
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('general.index'))
-    return redirect(url_for('general.index'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка в поле "{getattr(form, field).label.text}": {error}')
+        return redirect(url_for('user.user_reg'))
 
 
 # @blueprint.route('/profile-user')

@@ -1,7 +1,7 @@
 from webapp.salon.forms import SalonForm
 from webapp.general.forms import ImageForm
 
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
 from webapp.db import db
 
@@ -46,7 +46,11 @@ def process_salon_reg():
         db.session.add(new_salon)
         db.session.commit()
         return redirect(url_for('salon.profile_salon'))
-    return redirect(url_for('general.index'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка в поле "{getattr(form, field).label.text}": {error}')
+        return redirect(url_for('general.salon_reg'))
 
 
 @blueprint.route('/profile-salon')

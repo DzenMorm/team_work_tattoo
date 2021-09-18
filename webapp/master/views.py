@@ -1,7 +1,7 @@
 from webapp.master.forms import MasterForm
 from webapp.general.forms import ImageForm
 
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
 from webapp.db import db
 
@@ -60,7 +60,11 @@ def process_master_reg():
         db.session.add(master)
         db.session.commit()
         return redirect(url_for('master.profile_master'))
-    return redirect(url_for('general.index'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка в поле "{getattr(form, field).label.text}": {error}')
+        return redirect(url_for('master.master_reg'))
 
 
 @blueprint.route('/profile-master')
@@ -70,7 +74,12 @@ def profile_master():
     title = 'Профиль'
     form = ImageForm()
     images = current_user.master.images
-    return render_template('master/profile_master.html', title=title, form=form, images=images)
+    return render_template(
+        'master/profile_master.html',
+        title=title,
+        form=form,
+        images=images
+    )
 
 
 @blueprint.route('/card-master/<masterID>')

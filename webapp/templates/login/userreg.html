@@ -3,15 +3,7 @@
 <body class='backusreg'>
     <div class='container'>
         <div class="row align-items-center">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="alert alert-warning" role="alert">
-                {% for message in messages %}
-                {{ message }}<br>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endwith %}
+            {% include('flash_massages.html') %}
             <div class='col'></div>
             <span
                 class="border border-1 col-3 bg-light text-dark rounded-3 shadow-lg p-3 mb-5 rounded position-absolute top-50 start-50 translate-middle">

@@ -92,8 +92,11 @@ def process_reg():
         elif form.role.data == '3':
             return redirect(url_for('salon.salon_reg'))
         return redirect(url_for('general.login'))
-    flash('Пожалуйста, исправьте ошибки в форме регистрации')
-    return redirect(url_for('general.register'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка в поле "{getattr(form, field).label.text}": {error}')
+        return redirect(url_for('general.register'))
 
 
 @blueprint.route('/save-image', methods=['POST'])
